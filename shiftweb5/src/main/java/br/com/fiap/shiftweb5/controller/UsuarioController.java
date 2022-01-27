@@ -4,6 +4,7 @@ import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,33 +17,34 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import br.com.fiap.shiftweb5.model.UsuarioModel;
+import br.com.fiap.shiftweb5.repository.UsuarioRepository;
 
 @RestController
 @RequestMapping("/usuario")
 public class UsuarioController {
 	
-//	@GetMapping
-//	public ResponseEntity<List<UsuarioModel>> findAll() {
-//		
-//		List<UsuarioModel> lista = new ArrayList<>();
-//		lista.add( new UsuarioModel("191", "fmoreni1@gmail.com.br") );
-//		lista.add( new UsuarioModel("192", "fmoreni2@gmail.com.br") );
-//		lista.add( new UsuarioModel("193", "fmoreni3@gmail.com.br") );
-//		
-//		return ResponseEntity.ok(lista);
-//	}
-//	
-//	@GetMapping("/idade/{idade}")
-//	public ResponseEntity<UsuarioModel> findByIdade(@PathVariable("idade") Long id) {
-//			return ResponseEntity.noContent().build();
-//	}
+	@Autowired
+	private UsuarioRepository usuarioRepository;
+	//UsuarioRepository usuarioRepositiry = new UsuarioRepository();
+	
+	@GetMapping
+	public ResponseEntity<List<UsuarioModel>> findAll() {
+		
+		List<UsuarioModel> lista = usuarioRepository.findAll();
+		return ResponseEntity.ok(lista);
+	}
+	
+	@GetMapping("/idade/{idade}")
+	public ResponseEntity<UsuarioModel> findByIdade(@PathVariable("idade") Long id) {
+			return ResponseEntity.noContent().build();
+	}
 	
 	
 	@GetMapping("/{id}")
 	public ResponseEntity<UsuarioModel> findById(@PathVariable("id") Long idUsuario) {
 		
-		if ( idUsuario == 1 ) {
-			UsuarioModel usuarioModel = new UsuarioModel("191", "fmoreni1@gmail.com.br");
+		if ( usuarioRepository.existsById(idUsuario) ) {
+			UsuarioModel usuarioModel = usuarioRepository.findById(idUsuario).get();
 			return ResponseEntity.ok(usuarioModel);
 		} else {
 			return ResponseEntity.notFound().build();
@@ -57,8 +59,12 @@ public class UsuarioController {
 		
 		System.out.println( paramEmail + paramSenha );
 		
-		UsuarioModel usuarioModel = new UsuarioModel("191", "fmoreni1@gmail.com.br");
-		return ResponseEntity.ok(usuarioModel);
+		UsuarioModel usuarioModel = usuarioRepository.findByEmailAndSenha(paramEmail, paramSenha);
+		if(usuarioModel == null) {
+			return ResponseEntity.notFound().build();
+		}else {
+			return ResponseEntity.ok(usuarioModel);
+		}
 		
 	}
 	
@@ -70,6 +76,8 @@ public class UsuarioController {
 		System.out.println(usuarioModel);
 		
 		if ( usuarioModel.getIdade() != null ) {
+			
+			usuarioRepository.save(usuarioModel);
 		
 			URI location = ServletUriComponentsBuilder
 					.fromCurrentRequest()
@@ -93,27 +101,25 @@ public class UsuarioController {
 	public ResponseEntity put(@PathVariable("id") Long idUsuario,  
 							  @RequestBody UsuarioModel usuarioModel) {
 		
-		System.out.println(usuarioModel);
 		
-		if (idUsuario != 1) {
-			// Erro usuário não existe
-			return ResponseEntity.notFound().build();
-		} else if ( usuarioModel.getIdade() != null ) {
-			// Sucesso
+		if (usuarioRepository.existsById(idUsuario)) {
+			usuarioRepository.save(usuarioModel);
+			//usuarioModel.setIdUsuario(idUsuario); linha de código necessária para o put funcionar corretamente
+			usuarioModel.setIdUsuario(idUsuario);
 			return ResponseEntity.ok().build();
 		} else {
-			// Erro o Json está incorreto
-			return ResponseEntity.badRequest()
-					.body("Idade não informada");
+			return ResponseEntity.notFound().build();
 		}
 	}
 	
 	
+	
 	@DeleteMapping("/{id}")
-	public ResponseEntity delete(@PathVariable("id") Long id ) {
+	public ResponseEntity delete(@PathVariable("id") Long idUsuario ) {
 		
-		if (id != 1) {
-			return ResponseEntity.notFound().build();
+		if (usuarioRepository.existsById(idUsuario)) {
+			usuarioRepository.deleteById(idUsuario);
+			return ResponseEntity.ok().build();
 		} else {
 			return ResponseEntity.noContent().build();
 		}
