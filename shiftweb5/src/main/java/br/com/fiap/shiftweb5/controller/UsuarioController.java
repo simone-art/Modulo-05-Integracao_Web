@@ -75,7 +75,7 @@ public class UsuarioController {
 	public ResponseEntity post(@RequestBody UsuarioModel usuarioModel ) {
 		System.out.println(usuarioModel);
 		
-		if ( usuarioModel.getIdade() != null ) {
+		if ( usuarioModel.getIdade() >= 18 ) {
 			
 			usuarioRepository.save(usuarioModel);
 		
@@ -89,7 +89,7 @@ public class UsuarioController {
 		} else {
 			
 			return ResponseEntity.badRequest()
-					.body("Idade não informada");
+					.body("Usuário não poder ter menos de 18 anos");
 			
 		}
 		
