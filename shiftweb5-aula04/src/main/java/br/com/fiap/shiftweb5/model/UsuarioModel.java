@@ -15,7 +15,7 @@ public class UsuarioModel {
 	@Id
 	@Column(name="ID_USUARIO")
 	@GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "USUARIO_SEQ")
-	@SequenceGenerator( name="USUARIO_SEQ", initialValue = 10, allocationSize = 1)
+	@SequenceGenerator( name="USUARIO_SEQ", initialValue = 1, allocationSize = 1)
 	private Long idUsuario;
 	
 	@Column(name="CPF")

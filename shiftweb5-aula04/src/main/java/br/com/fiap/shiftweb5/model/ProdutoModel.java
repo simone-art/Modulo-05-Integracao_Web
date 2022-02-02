@@ -10,7 +10,7 @@ public class ProdutoModel {
     @Id
     @Column(name="ID_PRODUTO")
     @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "PRODUTO_SEQ")
-    @SequenceGenerator( name = "PRODUTO_SEQ", initialValue = 10, allocationSize = 1)
+    @SequenceGenerator( name = "PRODUTO_SEQ", initialValue = 1, allocationSize = 1)
     private Long idProduto;
 
     @Column(name="NOME_PRODUTO")
