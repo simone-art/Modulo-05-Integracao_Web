@@ -16,6 +16,7 @@ import br.com.fiap.shiftweb5.repository.UsuarioRepository;
 @RequestMapping("/usuario")
 //http://localhost:8080/usuario
 //Request Method
+@CrossOrigin("*")
 public class UsuarioController {
 
 
@@ -50,17 +51,14 @@ public class UsuarioController {
 		
 	}
 	
-	
-	
-	
-	
-	
+
 	
 	@GetMapping
 	public ResponseEntity<List<UsuarioModel>> findAll() {
 		List<UsuarioModel> lista = usuarioRepository.findAll() ;
 		return ResponseEntity.ok(lista);
 	}
+
 	
 	
 	@GetMapping("/{id}")
@@ -118,7 +116,7 @@ public class UsuarioController {
 		}
 		
 	}
-	
+
 	
 	@DeleteMapping("/{id}")
 	public ResponseEntity delete(@PathVariable("id") Long id ) {
@@ -131,5 +129,6 @@ public class UsuarioController {
 		}
 		
 	}
+
 	
 }
