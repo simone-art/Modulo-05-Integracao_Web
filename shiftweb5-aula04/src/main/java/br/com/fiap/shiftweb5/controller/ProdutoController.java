@@ -23,7 +23,7 @@ public class ProdutoController {
         return ResponseEntity.ok(lista);
     }
 
-    
+
     @GetMapping("/{id}")
     public ResponseEntity<ProdutoModel> findById(@PathVariable("id") Long id){
         if ( produtoRepository.existsById(id) ) {
