@@ -1,5 +1,7 @@
 package br.com.fiap.shiftweb5.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import javax.persistence.*;
 import java.util.Date;
 
@@ -35,6 +37,7 @@ public class ProdutoModel {
     private String caracteristicas;
 
     @Column(name = "DATA_LANCAMENTO")
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private Date dataLancamento;
 
     //(fetch = FetchType.EAGER), como vai ser carregado o categoriaModel
