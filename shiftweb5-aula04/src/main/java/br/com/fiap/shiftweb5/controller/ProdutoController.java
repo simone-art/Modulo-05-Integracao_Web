@@ -14,7 +14,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @RestController
 @RequestMapping("/produto")
@@ -67,6 +69,26 @@ public class ProdutoController {
         } else {
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @GetMapping("/marcas")
+    public ResponseEntity<JsonNode> findByMarcas(@RequestParam("idMarca") Long[] idMarcas) throws JsonProcessingException {
+
+        Set<MarcaModel> setMarcas = new HashSet<>();
+        MarcaModel marcaModel;
+        for( Long id: idMarcas ) {
+            marcaModel = new MarcaModel();
+            marcaModel.setIdMarca(id);
+            setMarcas.add(marcaModel);
+        }
+
+        List<ProdutoModel> lista = produtoRepository.findByMarcaModelIn(setMarcas) ;
+
+        ObjectMapper mapper = new ObjectMapper()
+                .addMixIn(CategoriaModel.class, CategoriaMixin.class)
+                .addMixIn(MarcaModel.class, MarcaMixin.class);
+
+        return ResponseEntity.ok( mapper.readTree( mapper.writeValueAsString(lista) ) );
     }
 
 
