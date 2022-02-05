@@ -11,4 +11,6 @@ import java.util.Set;
 @Repository
 public interface ProdutoRepository extends JpaRepository<ProdutoModel, Long> {
     List<ProdutoModel> findByMarcaModelIn(Set<MarcaModel> setMarcas);
+
+    List<ProdutoModel> findByNomeContains(String nome);
 }
