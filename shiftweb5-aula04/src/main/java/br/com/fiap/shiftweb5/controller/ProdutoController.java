@@ -1,9 +1,6 @@
 package br.com.fiap.shiftweb5.controller;
 
-import br.com.fiap.shiftweb5.model.CategoriaModel;
-import br.com.fiap.shiftweb5.model.MarcaModel;
-import br.com.fiap.shiftweb5.model.ProdutoModel;
-import br.com.fiap.shiftweb5.model.UsuarioModel;
+import br.com.fiap.shiftweb5.model.*;
 import br.com.fiap.shiftweb5.model.filters.mixin.CategoriaMixin;
 import br.com.fiap.shiftweb5.model.filters.mixin.MarcaMixin;
 import br.com.fiap.shiftweb5.repository.ProdutoRepository;
@@ -14,6 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -90,6 +90,7 @@ public class ProdutoController {
 
         return ResponseEntity.ok( mapper.readTree( mapper.writeValueAsString(lista) ) );
     }
+
 
 
 }

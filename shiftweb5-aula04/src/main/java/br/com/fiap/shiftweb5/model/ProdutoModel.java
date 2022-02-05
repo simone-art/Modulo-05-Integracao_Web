@@ -4,19 +4,17 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import javax.persistence.*;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name="SHIFT5_PRODUTO")
 public class ProdutoModel {
 
     @Id
-    @Column(name="ID_PRODUTO")
-    @GeneratedValue( strategy = GenerationType.SEQUENCE, generator = "PRODUTO_SEQ")
-    @SequenceGenerator( name = "PRODUTO_SEQ", initialValue = 1, allocationSize = 1)
+    @Column(name = "ID_PRODUTO")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "PRODUTO_SEQ")
+    @SequenceGenerator(name = "PRODUTO_SEQ", initialValue = 1, allocationSize = 1)
     private Long idProduto;
-
-    @Column(name="NOME_PRODUTO")
-    private String nomeProduto;
 
     @Column(name = "NOME")
     private String nome;
@@ -37,11 +35,9 @@ public class ProdutoModel {
     private String caracteristicas;
 
     @Column(name = "DATA_LANCAMENTO")
-    @JsonFormat(pattern = "dd/MM/yyyy")
+    @JsonFormat(pattern="dd/MM/yyyy")
     private Date dataLancamento;
 
-    //(fetch = FetchType.EAGER), como vai ser carregado o categoriaModel
-    //nullable = false atrela o produto a categoria. sem ele Produto nao pode existir
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name="ID_CATEGORIA", nullable = false)
     private CategoriaModel categoriaModel;
@@ -50,20 +46,13 @@ public class ProdutoModel {
     @JoinColumn(name="ID_MARCA", nullable = false)
     private MarcaModel marcaModel;
 
-    public ProdutoModel() {
-    }
 
-    public ProdutoModel(Long idProduto, String nomeProduto, String nome, String sku, String foto, String descricao, float preco, String caracteristicas, Date dataLancamento) {
-        this.idProduto = idProduto;
-        this.nomeProduto = nomeProduto;
-        this.nome = nome;
-        this.sku = sku;
-        this.foto = foto;
-        this.descricao = descricao;
-        this.preco = preco;
-        this.caracteristicas = caracteristicas;
-        this.dataLancamento = dataLancamento;
-    }
+    @ManyToMany
+    @JoinTable( name = "SHIFT5_PRODUTO_LOJA" ,
+            joinColumns = @JoinColumn( name = "ID_PRODUTO" , referencedColumnName = "ID_PRODUTO")  ,
+            inverseJoinColumns = @JoinColumn ( name = "ID_LOJA", referencedColumnName = "ID_LOJA") )
+    private List<LojaModel> lojas;
+
 
     public Long getIdProduto() {
         return idProduto;
@@ -71,14 +60,6 @@ public class ProdutoModel {
 
     public void setIdProduto(Long idProduto) {
         this.idProduto = idProduto;
-    }
-
-    public String getNomeProduto() {
-        return nomeProduto;
-    }
-
-    public void setNomeProduto(String nomeProduto) {
-        this.nomeProduto = nomeProduto;
     }
 
     public String getNome() {
@@ -135,5 +116,29 @@ public class ProdutoModel {
 
     public void setDataLancamento(Date dataLancamento) {
         this.dataLancamento = dataLancamento;
+    }
+
+    public CategoriaModel getCategoriaModel() {
+        return categoriaModel;
+    }
+
+    public void setCategoriaModel(CategoriaModel categoriaModel) {
+        this.categoriaModel = categoriaModel;
+    }
+
+    public MarcaModel getMarcaModel() {
+        return marcaModel;
+    }
+
+    public void setMarcaModel(MarcaModel marcaModel) {
+        this.marcaModel = marcaModel;
+    }
+
+    public List<LojaModel> getLojas() {
+        return lojas;
+    }
+
+    public void setLojas(List<LojaModel> lojas) {
+        this.lojas = lojas;
     }
 }
